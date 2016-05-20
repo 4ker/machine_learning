@@ -1,8 +1,3 @@
-<!--
-    作者：华校专
-    email: huaxz1986@163.com
-**  本文档可用于个人学习目的，不得用于商业目的  **
--->
 # k 近邻法
 
 1.k 近邻法是一种基本的分类与回归方法。它的输入为实例的特征向量，输出为实例的类别。分类时，对于新的实例，根据其 k 个最近邻的训练实例的类别，通过多数表决等方式进行预测
@@ -109,87 +104,86 @@ $$
 
 12.kd 树搜索的平均计算复杂度为 \\(O(\log N)\\) 。N 为训练集大小。 kd 树适合 \\(N >> k\\)的情形。当 N 与 维度 k 接近时，效率会迅速下降。
 
-13.下面给出一个身高体重的例子。
+13.下面给出`sklearn`中的 K近邻算法的例子。
 
 ```
 import numpy as np
-from sklearn import neighbors
-from sklearn.metrics import precision_recall_curve
-from sklearn.metrics import classification_report
-from sklearn.cross_validation import train_test_split
 import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+from sklearn import neighbors, datasets
 
-''''' 数据读入 '''
-data_str="\
-1.5 40 thin\n\
-1.5 50 fat\n\
-1.5 60 fat\n\
-1.6 40 thin\n\
-1.6 50 thin\n\
-1.6 60 fat\n\
-1.6 70 fat\n\
-1.7 50 thin\n\
-1.7 60 thin\n\
-1.7 70 fat\n\
-1.7 80 fat\n\
-1.8 60 thin\n\
-1.8 70 thin\n\
-1.8 80 fat\n\
-1.8 90 fat\n\
-1.9 80 thin\n\
-1.9 90 fat"
+n_neighbors = 15 # k值
 
-data   = []
-labels = []
-lines=data_str.split('\n')
-for line in lines:
-     tokens = line.strip().split(' ')
-     data.append([float(tk) for tk in tokens[:-1]])
-     labels.append(tokens[-1])
+# 导入数据集
+iris = datasets.load_iris()
+X = iris.data[:, :2]  # 仅仅使用前两个特征，这样的目的是为了绘制图形方便（二维图形）
+y = iris.target
 
-x = np.array(data)
-labels = np.array(labels)
-y = np.zeros(labels.shape)
+h = .02  # step size in the mesh
 
-''''' 标签转换为0/1 '''
-y[labels=='fat']=1
+# 分类和绘图
+cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA', '#AAAAFF']) #用于绘制网格图
+cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#0000FF']) # 用于绘制散点图
 
-''''' 拆分训练数据与测试数据 '''
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2)
+figure=plt.figure()
+ax1=figure.add_subplot(2,1,1)
+ax2=figure.add_subplot(2,1,2)
+ax=[ax1,ax2]
+for weights in ['uniform', 'distance']: #两种不同的权重
+    ########## 创建 Neighbours Classifier 然后训练数据########
+    clf = neighbors.KNeighborsClassifier(n_neighbors, weights=weights)
+    clf.fit(X, y)
+    ##### 将图形划分成若干个网格，判断每个网格所属的分类##########
+     x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1 ## x轴边界
+    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1 ## y轴边界
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+                         np.arange(y_min, y_max, h)) ## 划分
+    Z = clf.predict(np.c_[xx.ravel(), yy.ravel()]) ## 对每个网格交点，判断它的类型
+    Z = Z.reshape(xx.shape) #变形为 xx的形状
+    ax[weights=='uniform'].pcolormesh(xx, yy, Z, cmap=cmap_light) ##绘制一个color plot
 
-''''' 创建网格以方便绘制 '''
-h = .01
-x_min, x_max = x[:, 0].min() - 0.1, x[:, 0].max() + 0.1
-y_min, y_max = x[:, 1].min() - 1, x[:, 1].max() + 1
-xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
-                     np.arange(y_min, y_max, h))
-
-''''' 训练KNN分类器 '''
-clf = neighbors.KNeighborsClassifier(algorithm='kd_tree')
-clf.fit(x_train, y_train)
-
-'''''测试结果的打印'''
-answer = clf.predict(x)
-print(x)
-print(answer)
-print(y)
-print(np.mean( answer == y))
-
-# '''''准确率与召回率'''
-# precision, recall, thresholds = precision_recall_curve(y_train, clf.predict(x_train))
-# answer = clf.predict_proba(x)[:,1]
-# print(classification_report(y, answer, target_names = ['thin', 'fat']))
-
-''''' 将整个测试空间的分类结果用不同颜色区分开'''
-answer = clf.predict_proba(np.c_[xx.ravel(), yy.ravel()])[:,1]
-z = answer.reshape(xx.shape)
-plt.contourf(xx, yy, z, cmap=plt.cm.Paired, alpha=0.8)
-
-''''' 绘制训练样本 '''
-plt.scatter(x_train[:, 0], x_train[:, 1], c=y_train, cmap=plt.cm.Paired)
-plt.xlabel('height')
-plt.ylabel('weight')
-plt.savefig("F:/knn.png")
+    ###### 绘制训练样本的分类 #####
+    ax[weights=='uniform'].scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold)
+    ax[weights=='uniform'].set_xlim(xx.min(), xx.max())
+    ax[weights=='uniform'].set_ylim(yy.min(), yy.max())
+    ax[weights=='uniform'].set_title("3-Class classification (k = %i, weights = '%s')"
+              % (n_neighbors, weights))
+    figure.savefig("F:/knn.png")
 ```
 
-![knn](../imgs/statistical_learning/knn.png)
+  ![knn](../imgs/statistical_learning/knn.png) 
+
+
+- 类声明：
+
+```
+sklearn.neighbors.KNeighborsClassifier(n_neighbors=5, weights='uniform',
+ algorithm='auto', leaf_size=30, p=2, metric='minkowski',
+ metric_params=None, n_jobs=1, **kwargs)
+```
+- 其参数意义为：
+
+	- `n_neighbors`：k 值。即取多少个邻居
+	- `weights`：权重类型。即这些邻居投票权可以为相同或者不同。
+		- `'uniform'`：本节点的所有邻居节点的投票权重都相等	
+		- `'distance'`：本节点的所有邻居节点的投票权重与距离成反比。即越近的节点，其投票权重越大
+		- `[callable]`：一个可调用对象。它传入距离的数组，返回同样形状的权重
+	- `algorithm`：计算最近邻的算法。可以为：
+		- `'ball_tree'`：使用 `BallTree`算法
+		- `'kd_tree`：使用 `KDTree`算法
+		- `'brute'`：使用暴力搜索法
+		- `'auto'`：自动决定最合适的算法
+	- `leaf_size`：传给`BallTree`或者 `KDTree` `Leaf size`。它影响了树的构建和查询速度
+	- `metric`：距离度量。默认为`'minkowski'`距离。
+	- `p`:整数值，是在`'Minkowski'`度量上的指数。如果 `p=1`，对应于曼哈顿距离；`'p=2'`对应于欧拉距离。
+	- `n_jobs`：并行性。默认为 `-1`表示派发任务到所有计算机的 CPU上
+
+
+可以看到:
+
+- 随着`k`值的增大，每个网格所属的类型会趋同，类别的甄别能力会下降。
+- 随着 `p`值的增大，边界过渡会变得缓慢，但是总体形状保持不变（相当于空间映射）
+
+  ![knn_different_k](../imgs/statistical_learning/knn_different_k.png)
+ 
+  ![knn_different_p](../imgs/statistical_learning/knn_different_p.png) 
