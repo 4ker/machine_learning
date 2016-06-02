@@ -1,5 +1,7 @@
 # logistic 回归与最大熵模型
 
+## losistic 回归模型
+
 1.logistic回归是统计学习中的经典分类方法。
 
 最大熵是概率模型学习的一个准则，将其推广到分类问题得到最大熵模型。
@@ -114,18 +116,20 @@ P(Y=K/\mathbf x)=\frac{1}{1+\sum\_{k=1}^{K-1}\exp(\mathbf w_k \cdot \mathbf x)},
 $$
 其参数估计方法类似二项 logistic 回归模型
 
-7.最大熵原理：学习概率模型时，在所有可能的概率模型（即概率分布）中，熵最大的模型是最好的模型。
+## 最大熵模型
+
+1.最大熵原理：学习概率模型时，在所有可能的概率模型（即概率分布）中，熵最大的模型是最好的模型。
 > 通常还有其他约束条件来确定概率模型的集合，因此最大熵原理为：在满足约束条件情况下，选取熵最大的模型
  
 设随机变量 X 的概率分布为 P(X)，熵为：\\(H(P)=-\sum_X P(X)\log P(X)\\)，可以证明：\\(0 \le H(P) \le \log |X| \\) ，其中 \\(|X|\\) 为 X 的取值的个数。当且仅当 X 的分布为均匀分布是，有 \\(H(P)=\log |X|\\)
 > 即 X 服从均匀分布时， 熵最大。直观理解最大熵原理：在满足已知条件前提下，如果没有更多的信息，则那些不确定部分都是“等可能的”。熵最大化来表示等可能性
 
-8.最大熵原理选取熵最大的模型，而决策树的划分目标选取熵最小的划分。原因在于：
+2.最大熵原理选取熵最大的模型，而决策树的划分目标选取熵最小的划分。原因在于：
 
 - 分布未知时，等概率分布的熵最大。最大熵原理认为在满足相关约束的条件之后，分布是均匀的（也就是不应该再施加任何额外的约束）
 - 决策树的划分目标是为了通过不断的划分从而不断的降低实例所属的类的不确定性，最终给实例一个合适的分类。因此这是一个不确定性不断减小的过程，所以选取熵最小的划分。
 
-9.最大熵模型：设分类模型是一个条件概率分布 \\(P(Y/X=\mathbf x),X \in \mathscr X \subseteq \mathbb R^{n}\\) 为输入， \\(Y \in \mathscr Y\\) 为输出。
+3.最大熵模型：设分类模型是一个条件概率分布 \\(P(Y/X=\mathbf x),X \in \mathcal X \subseteq \mathbb R^{n}\\) 为输入， \\(Y \in \mathcal Y\\) 为输出。
 
 给定一个训练数据集 \\(T=\\{(\mathbf x_1,y_1),(\mathbf x_2,y_2),\cdots,(\mathbf x_N,y_N)\\}\\)，学习的目标是用最大熵原理选取最好的分类模型。
 
@@ -146,22 +150,22 @@ $$
 
 	我们可以假设这两个期望相等，即：\\(E\_{\tilde P}(f)=E\_{P}(f)\\)。我们将这个作为模型学习的约束条件
 	- 假设有 n 个特征函数 \\(f_i(\mathbf x,y),i=1,2,\cdots,n\\)，则有 n 个约束条件
-- 最大熵模型：假设满足所有约束条件的模型集合为：\\(\mathscr C=\\{P \in \mathscr P \mid E_P(f_i)=E_{\tilde P}(f_i),i=1,2,\cdots,n\\}\\) 。定义在条件概率分布 \\(P(Y/X)\\) 上的条件熵为：
+- 最大熵模型：假设满足所有约束条件的模型集合为：\\(\mathcal C=\\{P \in \mathcal P \mid E_P(f_i)=E_{\tilde P}(f_i),i=1,2,\cdots,n\\}\\) 。定义在条件概率分布 \\(P(Y/X)\\) 上的条件熵为：
 	$$H(P)=-\sum\_\{\mathbf x,y}\tilde P(\mathbf x)P(y/\mathbf x)\log P(y/\mathbf x)$$
-	则模型集合 \\(\mathscr C\\) 中条件熵最大的模型称为最大熵模型
+	则模型集合 \\(\mathcal C\\) 中条件熵最大的模型称为最大熵模型
 
-10.最大熵模型的学习：就是求解最大熵的过程。该过程可以形式化为约束最大化问题：
+4.最大熵模型的学习：就是求解最大熵的过程。该过程可以形式化为约束最大化问题：
 > 即求得条件概率 \\(P(y/\mathbf x)\\) 
 
 对给定的训练数据集 \\(T=\\{(\mathbf x_1,y_1),(\mathbf x_2,y_2),\cdots,(\mathbf x_N,y_N)\\}\\)，以及特征函数 \\(f_i(\mathbf x,y),i=1,2,\cdots,n\\) 最大熵模型的学习等价于约束最优化问题：
 $$
-\max\_{P\in \mathscr C} H(P)=-\sum\_\{\mathbf x,y}\tilde P(\mathbf x)P(y/\mathbf x)\log P(y/\mathbf x)\\\
+\max\_{P\in \mathcal C} H(P)=-\sum\_\{\mathbf x,y}\tilde P(\mathbf x)P(y/\mathbf x)\log P(y/\mathbf x)\\\
 s.t. E\_P(f_i)=E\_{\tilde P}(f_i),i=1,2,\cdots,n\\\
 \sum_y P(y/\mathbf x)=1
 $$
 将其转化为最小化问题：
 $$
-\min\_{P\in \mathscr C} -H(P)=\sum\_\{\mathbf x,y}\tilde P(\mathbf x)P(y/\mathbf x)\log P(y/\mathbf x)\\\
+\min\_{P\in \mathcal C} -H(P)=\sum\_\{\mathbf x,y}\tilde P(\mathbf x)P(y/\mathbf x)\log P(y/\mathbf x)\\\
 s.t. E\_P(f_i)-E\_{\tilde P}(f_i)=0,i=1,2,\cdots,n\\\
 \sum_y P(y/\mathbf x)=1
 $$
@@ -173,10 +177,10 @@ $$
 	=\sum\_{\mathbf x,y}\tilde P(\mathbf x)P(y/\mathbf x)\log P(y/\mathbf x)+w_0(1-\sum_y P(y/\mathbf x))\\\
 +\sum\_{i=1}^{n}w_i(\sum\_{\mathbf x,y}\tilde P(\mathbf x,y)f_i(\mathbf x,y)-\sum\_{\mathbf x,y}\tilde P(\mathbf x)P(y/\mathbf x)f_i(\mathbf x,y))
 	$$
-	最优化的原始问题是 \\(\min\_{P \in \mathscr C} \max\_{\mathbf w} L(P,\mathbf w)\\)，对偶问题是
-\\(\max\_{\mathbf w} \min\_{P \in \mathscr C} L(P,\mathbf w)\\)。由于拉格朗日函数  \\(L(P,\mathbf w)\\) 是凸函数，因此原始问题的解与对偶问题的解是等价的。
+	最优化的原始问题是 \\(\min\_{P \in \mathcal C} \max\_{\mathbf w} L(P,\mathbf w)\\)，对偶问题是
+\\(\max\_{\mathbf w} \min\_{P \in \mathcal C} L(P,\mathbf w)\\)。由于拉格朗日函数  \\(L(P,\mathbf w)\\) 是凸函数，因此原始问题的解与对偶问题的解是等价的。
 - 求解对偶问题：
-	- 先求解内部的极小化问题：\\(\min\_{P \in \mathscr C} L(P,\mathbf w)\\)，它是一个 \\(\mathbf w\\)的函数，将其记作 \\(\Psi(\mathbf w)=\min\_{P \in \mathscr C} L(P,\mathbf w)=L(P_\mathbf w,\mathbf w)\\)
+	- 先求解内部的极小化问题：\\(\min\_{P \in \mathcal C} L(P,\mathbf w)\\)，它是一个 \\(\mathbf w\\)的函数，将其记作 \\(\Psi(\mathbf w)=\min\_{P \in \mathcal C} L(P,\mathbf w)=L(P_\mathbf w,\mathbf w)\\)
 		- 具体的，先对 \\(L(P,\mathbf w)\\) 对 \\(P(y/\mathbf x)\\) 求偏导数：
 		$$
 		\frac{\partial L(P,\mathbf x)}{\partial P(y/\mathbf x)}=\sum\_{\mathbf x,y}\tilde P(\mathbf x)(\log P(y/\mathbf x)+1)-\sum_y w_0-\sum\_{\mathbf x,y}(\tilde P(\mathbf x)\sum\_{i=1}^{n}w_if_i(\mathbf x,y))\\\
@@ -193,20 +197,20 @@ $$
 
 > 总结为：先求对偶问题的内部极小化，得到  \\(\Psi(\mathbf w)\\) 函数，以及极值点 \\(P_\mathbf w(y/\mathbf x)\\)；再求  \\(\Psi(\mathbf w)\\) 函数的极大值，得到 \\(\mathbf w^{\*}\\) 。最后将  \\(\mathbf w^{\*}\\)  代入 \\(P\_\mathbf w(y/\mathbf x)\\) 得到最终模型 \\(P^{\*}\\)
 
-11.可以证明： \\(\Psi(\mathbf w)\\) 函数的最大化，等价于最大熵模型的极大似然估计。
+5.可以证明： \\(\Psi(\mathbf w)\\) 函数的最大化，等价于最大熵模型的极大似然估计。
 
 已知训练数据的经验概率分布为 \\(\tilde P(\mathbf x,y)\\)， 条件概率分布为 \\(P(y/\mathbf x)\\) 的对数似然函数为： \\(\log \prod_{\mathbf x,y}P(y/\mathbf x)^{\tilde P(\mathbf x,y)}=\sum\_{\mathbf x,y}\tilde P(\mathbf x,y) \log P(y/\mathbf x)\\)
 > 这里 \\(\tilde P(\mathbf x,y)\\) 作为指数的原因：假设 某个  \\(\mathbf x_i,y_i\\) 出现了 k 次，则条件概率中， \\(P(y/\mathbf x)\\) 的指数应该是 k（频数） 。但是如果对所有的 \\(\mathbf x,y\\) 取遍历乘法，指数取  \\(\tilde P(\mathbf x,y)\\) （频率）
 
 再利用:\\(P\_\mathbf w(y/\mathbf x)=\frac{1}{Z\_\mathbf w(\mathbf x)} \exp(\sum\_{i=1}^{n}w_i f_i(\mathbf x,y))\\) 代入，最后化简合并，最终发现它就是  \\(\Psi(\mathbf w)\\)
 
-12.最大熵模型与  logistic 回归模型有类似的形式。它们又称为对数线性模型。
+6.最大熵模型与  logistic 回归模型有类似的形式。它们又称为对数线性模型。
 
 - 模型学习就是在给定训练数据条件下对模型进行极大似然估计或者正则化的极大似然估计。
 - 他们的目标函数具有很好的性质：光滑的凸函数。因此有多种最优化方法可用，且保证能得到全局最优解。
 	- 最常用的方法有：改进的迭代尺度法、梯度下降法、牛顿法、拟牛顿法
 
-13.改进的迭代尺度法(`improved iterative scaling`:IIS)：
+7.改进的迭代尺度法(`improved iterative scaling`:IIS)：
 
 改进的迭代尺度法是一种最大熵模型学习的最优化算法。
 
@@ -259,7 +263,7 @@ A(\delta\mid\mathbf w)=\sum\_{\mathbf x,y}\tilde P(\mathbf x,y)\sum\_{i=1}^{n}\d
 $$
 
 
-14.IIS 算法：
+8.IIS 算法：
 
 - 输入：特征函数 \\(f_1,f_2,\cdots,f_n\\)， 经验分布 \\(\tilde P(X,Y)\\), 模型 \\(P_\mathbf w(y/\mathbf x)\\)
 - 输出：最优参数 \\(w_i^{\*}\\),最优模型 \\(P_{\mathbf w^{\*}}(y/\mathbf x)\\)
@@ -271,7 +275,7 @@ $$
 	- 若不是所有  \\(w_i \\) 均收敛，则重复上面的步骤2（`即对每一个 i `这一步）
 
 
-15.拟牛顿法：
+9.拟牛顿法：
 目标函数： $$\min\_{\mathbf w \in \mathbb R^{n}}f(\mathbf w)=\sum\_{\mathbf x}\tilde P(\mathbf x)\log \sum\_y \exp(\sum\_{i=1}^{n}w_i
  f_i(\mathbf x,y))- \sum\_{\mathbf x,y}\tilde P(\mathbf x,y)\sum\_{i=1}^{n}w\_i f\_i(\mathbf x,y)$$
 梯度:
@@ -295,7 +299,7 @@ $$
 		其中： \\(\mathbf y_k=\mathbf g\_{k+1}-\mathbf g_k, \quad \delta_k=\mathbf w^{<k+1\>}-\mathbf w^{<k\>}\\)
 			- 置 k=k+1 ，继续迭代
 
-16.`logistic`回归于最大熵模型本质上是等价的。
+10.`logistic`回归于最大熵模型本质上是等价的。
 
 - 假设`logistic regression`的自变量为 \\(\mathbf x=(\mathbf x^{(1)},\mathbf x^{(2)},\cdots,\mathbf x^{(n)})\\)，响应变量是 \\(y\\) ，那么`logistic regre
 ssion`是假设 \\(y\\)  对 \\(\mathbf x=(\mathbf x^{(1)},\mathbf x^{(2)},\cdots,\mathbf x^{(n)})\\) 的模型为指数族分布，并且使用最大似然法求解未知参数。
@@ -324,7 +328,7 @@ sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=
 	- `'l1'`：损失函数为 \\(\min\_{w,c}||w||_1+C\sum\_{i=1}^{n}\log(\exp(-y_i(\mathbf x_i^{T}w+c))+1)\\)
 	- `'l2'`：损失函数为 \\(\min\_{w,c}\frac 12 w^{T}w+C\sum\_{i=1}^{n}\log(\exp(-y_i(\mathbf x_i^{T}w+c))+1)\\)
 		> `newton-cg`和`lbfgs`算法器只支持`'l2'`正则化项
-- `dual`：一个布尔值。Dual or primal formulation. Dual formulation is only implemented for l2 penalty with liblinear solver. Prefer dual=False when n_samples > n_features
+- `dual`：布尔值。如果为`True`，则解决对偶问题；如果是`False`,则解决原始问题。对偶问题必须要求采用`liblinear`求解器以及`l2`正则化项。当`n_samples > n_features`时，倾向于采用`False`。
 - `C`：一个浮点数，是正则化项强度的倒数。该值必须大于0，且该值越小，正则化力度越强
 - `fit_intercept`：一个布尔值。如果为 `True`，则决策函数添加一个常数项；否则不添加常数项
 - `intercept_scaling`：一个浮点数。只有当算法器是 `liblinear`时有效。当`fit_intercept`为 `True`时，向量 x 变成 `[x,intercept_scaling]`\
@@ -340,9 +344,9 @@ sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=
 	- `'newton-cg', 'lbfgs' l, 'sag'` 只处理 L2 正则化项 
 - `tol`：一个浮点数，指定终止条件，即 \\(\varepsilon\\)
 - `multi_class`：一个字符串。可以是`'ovr'`或者`'multinomial'`。该选项只对`'lbfgs'`算法器有效
-	- `'ovr'`：对每个分类都看作一个二类分类问题。分类结果是：对于每个类别，要么是该类，要么不是该类。
-	- `'multinomial'`：视为一个整体的多分类问题
-- `verbose`：一个整数。For the liblinear and lbfgs solvers set verbose to any positive number for verbosity.
+	- `'ovr'`：对每个分类都看作一个二类分类问题。分类结果是：对于每个类别，要么是该类，要么不是该类。因此有`nclasses`个分类，就需要`nclasses`个二类分类器。
+	- `'multinomial'`：视为一个整体的多分类问题，只需要一个分类器
+- `verbose`：一个整数，用于开启输出。对于`liblinear`和`lbfgs`求解器，该值为任何正数则会开启输出。
 - `warm_start`：一个布尔值。如果为`True`，则使用前一个问题的解作为初始化值；否则清除前一个解。
 	- 对于`liblinear`算法器，该选项无效
 - `n_jobs`：一个整数。指定将该任务分配到多少个CPU上。如果为 -1 则使用所有的CPU
@@ -350,8 +354,8 @@ sklearn.linear_model.LogisticRegression(penalty='l2', dual=False, tol=0.0001, C=
 属性：
 
 - `coef_`：一个数组，形状为`(n_classes, n_features)`，指定了决策函数中每个特征的系数
-- `ntercept_ `: 一个数字,形状为` (n_classes,)`，指定了决策函数中的截距。如果 `fit_intercept`为 `False`，则这一项为全0.
-- `n_iter_ `:一个数字，形状是`(n_classes,) or (1, )`。指定了每个分类的真实迭代次数。If binary or multinomial, it returns only 1 element. For liblinear solver, only the maximum number of iteration across all classes is given.
+- `ntercept_ `: 一个数字,形状为` (n_classes,)`，指定了决策函数中的截距，即决策函数中的常数项。如果 `fit_intercept`为 `False`，则这一项为全0.
+- `n_iter_ `:一个数字，形状是`(n_classes,) or (1, )`。指定了每个分类的真实迭代次数。如果是二类分类问题，或者是多类分类但是采用`multinomial`方法分类，则返回一个值； 如果是多类分类且采用`one-vs-rest`策略，则返回一个`(n_classes,)`数组。对于`liblinear `求解器，只返回所有的类别的迭代次数中最大的那个迭代次数。
 
 ```
 # 四种算法器区别

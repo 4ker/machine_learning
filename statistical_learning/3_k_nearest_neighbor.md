@@ -1,5 +1,7 @@
 # k 近邻法
 
+## k 近邻算法
+
 1.k 近邻法是一种基本的分类与回归方法。它的输入为实例的特征向量，输出为实例的类别。分类时，对于新的实例，根据其 k 个最近邻的训练实例的类别，通过多数表决等方式进行预测
 
 - k 近邻法不具有显式的学习过程
@@ -10,7 +12,7 @@
 
 3.k 近邻法的算法描述：
 
-- **输入**： 训练数据集 \\(T=\\{(\mathbf x_1,y_1),(\mathbf x_2,y_2),\cdots,(\mathbf x_N,y_N)\\},\mathbf x_i \in \mathscr X \subseteq \mathbb R^{n}\\) 为实例的特征向量。 \\(y_i \in \mathbb Y=\\{c_1,c_2,\cdots,c_k\\}\\)，为实例的类别。 \\(i=1,2,\cdots,N\\)。 给定实例特征向量 \\(\mathbf x\\)
+- **输入**： 训练数据集 \\(T=\\{(\mathbf x_1,y_1),(\mathbf x_2,y_2),\cdots,(\mathbf x_N,y_N)\\},\mathbf x_i \in \mathcal X \subseteq \mathbb R^{n}\\) 为实例的特征向量。 \\(y_i \in \mathbb Y=\\{c_1,c_2,\cdots,c_k\\}\\)，为实例的类别。 \\(i=1,2,\cdots,N\\)。 给定实例特征向量 \\(\mathbf x\\)
 - **输出**： 实例 \\(\mathbf x\\) 所属的类别 \\(y\\)
 - 步骤：
 	- 根据给定的距离度量，在 T 中寻找与 \\(\mathbf x\\) 最近邻的 k 个点。定义涵盖这 k 个点的 \\(\mathbf x\\) 的邻域记作 \\(N_k(\mathbf x)\\)
@@ -32,7 +34,7 @@
 - k 近邻模型的特征空间的距离一般为欧氏距离，也可以是一般的 \\(L_p\\) 距离：
 	$$
 	L_p(\mathbf{x_i,x_j})=(\sum_{l=1}^{n}|\mathbf x_i^{(l)}- \mathbf x_j^{(l)}|^{p})^{1/p}\\\
-	\mathbf{x_i,x_j} \in \mathscr X=\mathbb R^{n}\\\
+	\mathbf{x_i,x_j} \in \mathcal X=\mathbb R^{n}\\\
 	\mathbf x_i=(\mathbf x_i^{(1)},\mathbf x_i^{(2)},\cdots,\mathbf x_i^{(n)})\\\
 	\mathbf y_i=(\mathbf y_i^{(1)},\mathbf y_i^{(2)},\cdots,\mathbf y_i^{(n)})\\\
 	p \ge 1
@@ -59,23 +61,25 @@
 
 8.k 近邻法的分类规则往往采用多数表决。设分类的损失函数为 0-1 损失函数，分类函数为 \\(f:\mathbb R^{n} \rightarrow \\{c_1,c_2,\cdots,c_k\\}\\) ，误分类概率为： \\(P(Y \ne f(X)=1-P(Y=f(X))\\)
 
-给定实例  \\(\mathbf x \in \mathscr X\\) ，其最邻近的 k 个训练点构成集合   \\(N_k(\mathbf x)\\)。 设涵盖 \\(N_k(\mathbf x)\\) 区域的类别为  \\(c_j\\)，则误分类率为：
+给定实例  \\(\mathbf x \in \mathcal X\\) ，其最邻近的 k 个训练点构成集合   \\(N_k(\mathbf x)\\)。 设涵盖 \\(N_k(\mathbf x)\\) 区域的类别为  \\(c_j\\)，则误分类率为：
 $$
 \frac {1}{k}\sum_{\mathbf x_i \in N_k(\mathbf x)}I(y_i \ne c_j)=1-\frac{1}{k}\sum\_{\mathbf x_i \in N_k(\mathbf x)}I(y_i = c_j)
 $$
 
 误分类率就是训练数据的经验风险。要是误分类率最小，即经验风险最小，则使得  \\(\sum\_{\mathbf x_i \in N_k(\mathbf x)}I(y_i = c_j)\\) 最大。即多数表决规则等价于经验风险最小化
 
-9.实现 k 近邻法时，注意考虑问题是如何对训练数据进行快速 k 近邻搜索
+## kd树
+
+1.实现 k 近邻法时，注意考虑问题是如何对训练数据进行快速 k 近邻搜索
 
 - 最简单的实现方法：线性扫描。此时要计算输入实例与每个训练实例的距离。当训练集很大时，计算非常耗时
 - 用 kd 树存储训练数据时，可以大幅提高 k 近邻搜索的效率
 
-10.**kd树**：是一种对 k 维空间中的实例点进行存储一边对其进行快速检索的树型数据结构。
+2.**kd树**：是一种对 k 维空间中的实例点进行存储一边对其进行快速检索的树型数据结构。
 
 - kd 树是二叉树，表示对 k 维空间的一个划分。构造 kd 树的过程相当于不断的用垂直于坐标轴的超平面将 k 维空间切分的过程。 kd 树的每个结点对应于一个 k 维超矩形区域
 - 构造平衡 kd 树的算法：
-	- 输入： k 维空间数据集 \\(T=\\{\mathbf x_1,\mathbf x_2,\cdots,\mathbf x_N\\},\mathbf x_i \in \mathscr X \subseteq \mathbb R^{k}\\)
+	- 输入： k 维空间数据集 \\(T=\\{\mathbf x_1,\mathbf x_2,\cdots,\mathbf x_N\\},\mathbf x_i \in \mathcal X \subseteq \mathbb R^{k}\\)
 	- 输出： kd 树
 	- 算法步骤：
 		- 开始：构造根结点。根结点对应于包含 T 的 k 维超矩形。
@@ -86,7 +90,7 @@ $$
 		- 重复：对深度为 j 的结点，选择 \\(\mathbf x^{(l)}\\) 为切分的坐标轴， \\(l=j\pmod k+1\\)。本次切分之后，树的深度为 j+1。这里取模，而不是 \\(l=j+1\\) 是因为树的深度可以超过维度 k，此时切分轴又重复回到 \\(\mathbf x^{(1)}\\)，轮转坐标轴进行切分
 		- 结束：直到所有结点两个子域中没有实例存在时，切分停止。此时形成 kd 树的区域划分。
 
-11.用 kd 树的最近邻搜索（k 近邻搜索依次类推）：
+3.用 kd 树的最近邻搜索（k 近邻搜索依次类推）：
 
 - 输入： 已构造的 kd 树；测试点 \\(\mathbf x\\)
 - 输出： \\(\mathbf x\\) 的最近邻测试点
@@ -102,9 +106,11 @@ $$
 		- 若不相交，则直接回退
 	- 当回退到根结点时，搜索结束。最后的”当前最近点“即为  \\(\mathbf x\\)  的最近邻点
 
-12.kd 树搜索的平均计算复杂度为 \\(O(\log N)\\) 。N 为训练集大小。 kd 树适合 \\(N >> k\\)的情形。当 N 与 维度 k 接近时，效率会迅速下降。
+4.kd 树搜索的平均计算复杂度为 \\(O(\log N)\\) 。N 为训练集大小。 kd 树适合 \\(N >> k\\)的情形。当 N 与 维度 k 接近时，效率会迅速下降。
 
-13.下面给出`sklearn`中的 K近邻算法的例子。
+## 实践
+
+1.下面给出`sklearn`中的 K近邻算法的例子。
 
 ```
 import numpy as np

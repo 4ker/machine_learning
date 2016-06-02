@@ -1,5 +1,7 @@
 # 朴素贝叶斯法
 
+## 朴素贝叶斯法的原理
+
 1.朴素贝叶斯法是基于贝叶斯定理与特征条件独立假设的分类方法：
 
 - 对给定的训练集，首先基于特征条件独立假设学习输入、输出的联合概率分布。然后基于此模型，对给定的输入 \\(\mathbf x\\) ，利用贝叶斯定理求出后验概率最大的输出 \\(y\\)
@@ -27,9 +29,11 @@ $$P(A)=P(A/B_1)P(B_1)+P(A/B_2)P(B_2)+\cdots+P(A/B_n)P(B_n)=\sum_{j=1}^{n}P(A/B_j
 5.**贝叶斯定理**：设试验 E 的样本空间为 S， A 为 E的事件， \\(B_1,B_2,\cdots,B_n\\) 为样本空间 S 的一个划分，且 \\(P(A) \gt 0,P(B_i) \ge 0(i=1,2,\cdots,n)\\) ，则有：
 $$P(B_i/A)=\frac{P(A/B_i)P(B_i)}{\sum_{j=1}^{n}P(A/B_j)P(B_j)}$$
 
-6.**贝叶斯分类器**：
+## 朴素贝叶斯法算法
 
-设输入空间 \\(\mathscr X \subseteq \mathbb R^{n}\\) 为 n  维向量的集合。输出空间为类标记集合 \\(\mathscr Y =\\{ c_1,c_2,\cdots,c_k\\}\\) ， \\(X\\) 为定义在  \\(\mathscr X\\) 上的随机向量，\\(Y\\) 为定义在  \\(\mathscr Y\\) 上的随机变量。则 \\(P(X,Y)\\) 为 X 和 Y 的联合概率分布。训练数据集 \\(T=\\{(\mathbf x_1,y_1),(\mathbf x_2,y_2),\cdots,(\mathbf x_N,y_N)\\}\\)   由 \\(P(X,Y)\\) 独立同分布产生
+1.**贝叶斯分类器**：
+
+设输入空间 \\(\mathcal X \subseteq \mathbb R^{n}\\) 为 n  维向量的集合。输出空间为类标记集合 \\(\mathcal Y =\\{ c_1,c_2,\cdots,c_k\\}\\) ， \\(X\\) 为定义在  \\(\mathcal X\\) 上的随机向量，\\(Y\\) 为定义在  \\(\mathcal Y\\) 上的随机变量。则 \\(P(X,Y)\\) 为 X 和 Y 的联合概率分布。训练数据集 \\(T=\\{(\mathbf x_1,y_1),(\mathbf x_2,y_2),\cdots,(\mathbf x_N,y_N)\\}\\)   由 \\(P(X,Y)\\) 独立同分布产生
 
 - 朴素贝叶斯法通过训练数据集学习联合概率分布 \\(P(X,Y)\\)。具体的学习下列概率分布：
 	- 先验概率分布： \\(P(Y=c_k),k=1,2,\cdots,K\\)
@@ -57,7 +61,7 @@ $$P(B_i/A)=\frac{P(A/B_i)P(B_i)}{\sum_{j=1}^{n}P(A/B_j)P(B_j)}$$
 
 	由于对有所的 \\(c_k,k=1,2,\cdots,K\\) ，上式的分母都相同（均为 \\(P(\mathbf x)\\)），因此上式重写为：$$y=f(\mathbf x)=\arg \max\_{c_k}{P(Y=c_k)\prod\_{i=1}^{n}P(X^{(i)}= \mathbf x^{(i)}/Y=c_k)}$$
 
-7.贝叶斯分类器是后验概率最大化，等价于期望风险最小化。
+2.贝叶斯分类器是后验概率最大化，等价于期望风险最小化。
 
 令损失函数为：
 $$
@@ -65,27 +69,27 @@ L(Y,f(X))= \begin{cases}
 1, & Y \ne f(X) \\\
 0, & Y=f(X)
 \end{cases} \\\
-R_{exp}(f)=E[L(Y,f(X)]=\sum\_{\mathbf x \in \mathscr X}\sum\_{y \in \mathscr Y}[L(y,f(\mathbf x))P(X=\mathbf x,Y=y)]
+R_{exp}(f)=E[L(Y,f(X)]=\sum\_{\mathbf x \in \mathcal X}\sum\_{y \in \mathcal Y}[L(y,f(\mathbf x))P(X=\mathbf x,Y=y)]
 $$
 
 根据特征的条件概率独立性假设，有：
 $$
-R_{exp}(f)=E[L(Y,f(X)]=\sum\_{\mathbf x \in \mathscr X}\sum\_{y \in \mathscr Y}[L(y,f(\mathbf x))P(X=\mathbf x,Y=y)]\\\
-= \sum\_{\mathbf x \in \mathscr X}\sum\_{k=1}^{K}[L(c_k,f(\mathbf x))P(X=\mathbf x,Y=c_k)]\\\
+R_{exp}(f)=E[L(Y,f(X)]=\sum\_{\mathbf x \in \mathcal X}\sum\_{y \in \mathcal Y}[L(y,f(\mathbf x))P(X=\mathbf x,Y=y)]\\\
+= \sum\_{\mathbf x \in \mathcal X}\sum\_{k=1}^{K}[L(c_k,f(\mathbf x))P(X=\mathbf x,Y=c_k)]\\\
 =E_X[\sum\_{k=1}^{K}L(c_k,f(\mathbf x))P(c_k/X=\mathbf x)]
 $$
 
 为了使得期望风险最小化，只需要对 \\(X=\mathbf x\\) 逐个极小化。因此有：
 $$
-f(x)=\arg \min_{y \in \mathscr Y} \sum\_{k=1}^{K}L(c_k,f(x))P(c_k/X=\mathbf x)\\\
-= \arg \min\_{y \in \mathscr Y} \sum\_{k=1}^{K} P(y \ne c_k/X=\mathbf x)\\\
-= \arg \min\_{y \in \mathscr Y}(1-P(y=c_k/X=\mathbf x))\\\
-= \arg \max\_{y \in \mathscr Y}P(y=c_k/X=\mathbf x)\\\
+f(x)=\arg \min_{y \in \mathcal Y} \sum\_{k=1}^{K}L(c_k,f(x))P(c_k/X=\mathbf x)\\\
+= \arg \min\_{y \in \mathcal Y} \sum\_{k=1}^{K} P(y \ne c_k/X=\mathbf x)\\\
+= \arg \min\_{y \in \mathcal Y}(1-P(y=c_k/X=\mathbf x))\\\
+= \arg \max\_{y \in \mathcal Y}P(y=c_k/X=\mathbf x)\\\
 $$
 
 即得到了后验概率最大化。
 
-8.在朴素贝叶斯法中，学习意味着估计概率：
+3.在朴素贝叶斯法中，学习意味着估计概率：
 
 - \\(P(Y=c_k)\\)
 - \\(P(X^{(j)}=\mathbf x^{(j)}/Y=c_k)\\)
@@ -101,7 +105,7 @@ P(X^{(j)}=a\_{j\;l}/Y=c_k)=\frac{\sum\_{i=1}^{N}I(\mathbf x_i^{(j)}=a\_{j \; l},
 j=1,2,\cdots,n; \\\l=1,2,\cdots,s_j;\\\k=1,2,\cdots,K
 $$
 
-9.**朴素贝叶斯算法**：
+4.**朴素贝叶斯算法**：
 
 - **输入**：
 	- 训练集 \\(T=\\{(\mathbf x_1,y_1),(\mathbf x_2,y_2),\cdots,(\mathbf x_N,y_N)\\}\\) ,\\(\mathbf x_i=(\mathbf x_i^{(1)},\mathbf x_i^{(2)},\cdots,\mathbf x_i^{(n)})\\), \\(\mathbf x_i^{(j)}\\) 为第 i 个样本的第 j 个特征，其中 \\(\mathbf x_i^{(j)} \in \\{a\_{j1},a\_{j2},\cdots,a\_{js_j}\\}\\)， \\(a_{j \; l}\\)为第 \\(j\\) 个特征可能取到的第 \\(l\\) 个值， \\(j=1,2,\cdots,n,\quad l=1,2,\cdots,s_j,\quad y_i \in \\{c_1,c_2,\cdots,c_k\\}\\)
@@ -119,7 +123,7 @@ $$
 	- 确定实例 \\(\mathbf x\\) 的分类：
 	$$y=\arg \max\_{c_k} P(Y=c_k)\prod_{j=1}^{n}P(X^{(j)}=\mathbf x^{(j)}/Y=c_k)$$
 
-10.**贝叶斯估计**：
+5.**贝叶斯估计**：
 
 设第 j 个特征 \\(\mathbf x^{(j)}\\) 可能的取值为 \\(a\_{j1},a\_{j2},\cdots,a\_{js_j}\\)。则条件概率
 \\(P(X^{(j)}=a_{j\;l}/Y=c_k)\\) 的极大似然估计为：
