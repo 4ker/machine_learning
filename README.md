@@ -9,8 +9,14 @@
 
 - 李航的《统计学习方法》
 - 周志华的《机器学习》
-- Peter Harrington 的《机器学习实战》
 - Python的  Scikit-Learn 开源库。
+
+## 关于 Python/numpy/matplotlib
+本笔记的实践部分是Python语言编写。
+
+- 关于Python教程，请参考本人在github 上的Python笔记 [我的python](https://github.com/huaxz1986/python_learning_notes)
+- 关于numpy和matplotlib教程，请参考本人在github上的python工具的笔记 [python_tools](https://github.com/huaxz1986/python_tools)
+
 
 ## 相关软件
 
